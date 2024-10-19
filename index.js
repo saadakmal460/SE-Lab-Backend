@@ -1,12 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const userRouter = require('./routes/user.route')
-const authRouter = require('./routes/auth.route')
-const listingRouter = require('./routes/listing.route')
-
-require('dotenv').config();
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import userRouter from './routes/user.route.js';
+import authRouter from './routes/auth.route.js';
+import listingRouter from './routes/listing.route.js';
+import cookieParser from 'cookie-parser';
+dotenv.config();
 
 mongoose
   .connect('mongodb+srv://saadakmal460:12345@task-manager.3fgcnhr.mongodb.net/real-estate-2?retryWrites=true&w=majority&appName=Task-Manager')
@@ -19,7 +18,6 @@ mongoose
 
 const app = express();
 
-app.use(cors())
 app.use(express.json());
 
 app.use(cookieParser());

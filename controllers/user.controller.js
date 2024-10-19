@@ -1,15 +1,15 @@
-const bcryptjs = require('bcryptjs');
-const User = require('../models/user.model.js');
-const { errorHandler } = require('../utils/error.js');
-const Listing = require('../models/listing.model.js');
+import bcryptjs from 'bcryptjs';
+import User from '../models/user.model.js';
+import { errorHandler } from '../utils/error.js';
+import Listing from '../models/listing.model.js';
 
- const test = (req, res) => {
+export const test = (req, res) => {
   res.json({
     message: 'Api route is working!',
   });
 };
 
- const updateUser = async (req, res, next) => {
+export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, 'You can only update your own account!'));
   try {
@@ -38,7 +38,7 @@ const Listing = require('../models/listing.model.js');
   }
 };
 
- const deleteUser = async (req, res, next) => {
+export const deleteUser = async (req, res, next) => {
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, 'You can only delete your own account!'));
   try {
@@ -50,7 +50,7 @@ const Listing = require('../models/listing.model.js');
   }
 };
 
- const getUserListings = async (req, res, next) => {
+export const getUserListings = async (req, res, next) => {
   if (req.user.id === req.params.id) {
     try {
       const listings = await Listing.find({ userRef: req.params.id });
@@ -63,10 +63,17 @@ const Listing = require('../models/listing.model.js');
   }
 };
 
-module.exports = {
-
-  getUserListings,
-  deleteUser,
-  updateUser
-
-}
+export const getUser = async (req, res, next) => {
+  try {
+    
+    const user = await User.findById(req.params.id);
+  
+    if (!user) return next(errorHandler(404, 'User not found!'));
+  
+    const { password: pass, ...rest } = user._doc;
+  
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
